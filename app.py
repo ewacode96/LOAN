@@ -1,11 +1,13 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, QGridLayout
 from PyQt5.QtGui import QPixmap
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtGui import QCursor
+
 
 widgets = {
     "logo": [],
+    "label": [],
     "button": [],
     "score": [],
     "question": [],
@@ -31,9 +33,45 @@ def clear():
         for i in range(0, len(widgets[widget])):
             widgets[widget].pop()
 
-def start():
-    clear()
-    frame2()
+# def start():
+#     clear()
+#     browse()
+
+def browse():
+    dialog = QFileDialog()
+    dialog.setDirectory(r'C:\Users\ewasi\PycharmProjects\CFG\ING')
+    dialog.setNameFilter("Documents (*.pdf)")
+    dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+    dialog.setViewMode(QFileDialog.ViewMode.List)
+    if dialog.exec():
+        filename = dialog.selectedFiles()
+    print(filename[-1])
+    # print(type(filename[-1]))
+    label.setText(filename[-1])
+
+
+
+def main_button(text):
+    button = QPushButton(text)
+    button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+    button.setStyleSheet(
+        "*{border: 4px solid '#BC006C';" +
+        "border-radius: 15px;" +
+        "font-size: 35px;" +
+        "color: 'white';" +
+        "padding: 25x 0;" +
+        "margin: 100px 200px;}" +
+        "*:hover{background: '#BC006C';}"
+    )
+    return button
+
+# def change_label(label):
+#     widgets["label"].append(label)
+#     print(widgets["label"][-2])
+#     print(widgets["label"][-1])
+
+
+
 
 def create_buttons(answer, l_margin, r_margin):
     button = QPushButton(answer)
@@ -61,24 +99,26 @@ def frame1():
     logo.setStyleSheet("margin-top: 100px;")
     widgets["logo"].append(logo)
 
+    label = QLabel()
+    label.setText("filename")
+    label.setStyleSheet("color: 'white'")
+    # widgets["label"].append(label)
+
     #button
 
-    button = QPushButton("Calculate")
-    button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
-    button.setStyleSheet(
-        "*{border: 4px solid '#BC006C';" +
-        "border-radius: 15px;" +
-        "font-size: 35px;" +
-        "color: 'white';" +
-        "padding: 25x 0;" +
-        "margin: 100px 200px;}" +
-        "*:hover{background: '#BC006C';}"
-    )
-    button.clicked.connect(start)
+    button = main_button("Wybierz historie")
+    button.clicked.connect(browse)
+    widgets["button"].append(button)
+
+    button = main_button("Wybierz harmonogram")
+    button.clicked.connect(browse)
     widgets["button"].append(button)
 
     grid.addWidget(widgets["logo"][-1], 0, 0)
-    grid.addWidget(widgets["button"][-1], 1, 0)
+    grid.addWidget(widgets["button"][-2], 1, 0)
+    grid.addWidget(widgets["button"][-1], 2, 0)
+    # grid.addWidget(widgets["label"][-1], 3, 0)
+    grid.addWidget(label, 3, 0)
 
 def frame2():
     score = QLabel("80")
@@ -130,3 +170,4 @@ window.setLayout(grid)
 
 window.show()
 sys.exit(app.exec())
+
