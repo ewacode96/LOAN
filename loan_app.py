@@ -159,7 +159,8 @@ class App(QWidget):
                 widgets[widget].pop()
         self.label = QLabel()
         self.label.setText(self.message)
-        self.label.setStyleSheet("color: 'white'")
+        self.label.setStyleSheet("color: 'white';" +
+                                 "font-size: 35px")
         widgets["label"].append(self.label)
         grid.addWidget(widgets["label"][-1], 1, 0)
 
