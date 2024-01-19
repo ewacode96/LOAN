@@ -2,6 +2,8 @@ import sys
 import fitz
 import os
 import re
+import pandas as pd
+import numpy as np
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, QGridLayout
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtGui, QtCore, QtQuick
@@ -39,7 +41,7 @@ app = QApplication(sys.argv)
 window = QWidget()
 window.setWindowTitle("Calculate your loan")
 window.setFixedWidth(1000)
-# window.move(2700, 200)
+window.move(1000, 200)
 window.setStyleSheet("background: #161219;")
 
 grid = QGridLayout()
@@ -57,9 +59,9 @@ class App(QWidget):
         # print(self.filename)
         # print(type(filename[-1]))
         # self.label.setText(self.filename[-1])
-        self.read_file()
+        self.open_file()
 
-    def read_file(self):
+    def open_file(self):
         for i in self.filename:
             doc = fitz.open(i)
             text = ""
@@ -86,11 +88,19 @@ class App(QWidget):
         for x in nadplaty:
             suma_nadplaty = suma_nadplaty + x
 
-        print(f'Historia:\nKapitał: {round(suma_kapital, 2)}')
-        print(f'Nadpłaty: {suma_nadplaty}')
-        print(f'Suma: {suma_kapital + suma_nadplaty}')
-        print(f'Pozostało: {round(160000 - (suma_kapital + suma_nadplaty), 2)}')
-        print(f'Odsetki: {round(suma_odsetki, 2)}')
+        self.message = (f'Historia:\nKapitał: {round(suma_kapital, 2)}'
+                   f'\nNadpłaty: {suma_nadplaty}'
+                   f'\nSuma: {suma_kapital + suma_nadplaty}'
+                   f'\nPozostało: {round(160000 - (suma_kapital + suma_nadplaty), 2)}'
+                   f'\nOdsetki: {round(suma_odsetki, 2)}')
+
+        # print(message)
+        self.frame2()
+        # print(f'Historia:\nKapitał: {round(suma_kapital, 2)}')
+        # print(f'Nadpłaty: {suma_nadplaty}')
+        # print(f'Suma: {suma_kapital + suma_nadplaty}')
+        # print(f'Pozostało: {round(160000 - (suma_kapital + suma_nadplaty), 2)}')
+        # print(f'Odsetki: {round(suma_odsetki, 2)}')
 
 
     def main_button(self, text):
@@ -101,8 +111,8 @@ class App(QWidget):
             "border-radius: 15px;" +
             "font-size: 35px;" +
             "color: 'white';" +
-            "padding: 25x 0;" +
-            "margin: 100px 200px;}" +
+            # "padding: 100x 100px;" +
+            "margin: 100px 100px;}" +
             "*:hover{background: '#BC006C';}"
         )
         return button
@@ -110,9 +120,10 @@ class App(QWidget):
     def frame1(self):
         image = QPixmap("logo.png")
         logo = QLabel()
-        logo.setPixmap(image)
+        logo.setPixmap(image.scaled(200, 200, QtCore.Qt.KeepAspectRatio))
         logo.setAlignment(QtCore.Qt.AlignCenter)
         logo.setStyleSheet("margin-top: 100px;")
+        logo.resize(20,20)
         widgets["logo"].append(logo)
 
         self.label = QLabel()
@@ -122,19 +133,35 @@ class App(QWidget):
 
         #button
 
-        button = self.main_button("Wybierz historie")
-        button.clicked.connect(self.browse)
-        widgets["button"].append(button)
-
         button = self.main_button("Wybierz harmonogram")
         button.clicked.connect(self.browse)
         widgets["button"].append(button)
 
+        button = self.main_button("Wybierz historie")
+        button.clicked.connect(self.browse)
+        widgets["button"].append(button)
+
+        button = self.main_button("Oblicz")
+        button.clicked.connect(self.browse)
+        widgets["button"].append(button)
+
         grid.addWidget(widgets["logo"][-1], 0, 0)
-        grid.addWidget(widgets["button"][-2], 1, 0)
-        grid.addWidget(widgets["button"][-1], 2, 0)
-        grid.addWidget(widgets["label"][-1], 3, 0)
+        grid.addWidget(widgets["button"][-3], 1, 0)
+        grid.addWidget(widgets["button"][-2], 2, 0)
+        grid.addWidget(widgets["button"][-1], 3, 0)
+        grid.addWidget(widgets["label"][-1], 4, 0)
         # grid.addWidget(self.label, 3, 0)
+    def frame2(self):
+        for widget in widgets:
+            if widgets[widget] != []:
+                widgets[widget][-1].hide()
+            for i in range(0, len(widgets[widget])):
+                widgets[widget].pop()
+        self.label = QLabel()
+        self.label.setText(self.message)
+        self.label.setStyleSheet("color: 'white'")
+        widgets["label"].append(self.label)
+        grid.addWidget(widgets["label"][-1], 1, 0)
 
 temp = App()
 temp.frame1()
