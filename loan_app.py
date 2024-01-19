@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWid
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import QDir
 
 widgets = {
     "logo": [],
@@ -46,14 +47,14 @@ grid = QGridLayout()
 class App(QWidget):
     def browse(self):
         dialog = QFileDialog()
-        self.path = r'C:\Users\ewasi\PycharmProjects\CFG\ING'
+        self.path = QDir.currentPath()
         dialog.setDirectory(self.path)
         dialog.setNameFilter("Documents (*.pdf)")
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         dialog.setViewMode(QFileDialog.ViewMode.List)
         if dialog.exec():
             self.filename = dialog.selectedFiles()
-        print(self.filename)
+        # print(self.filename)
         # print(type(filename[-1]))
         # self.label.setText(self.filename[-1])
         self.read_file()

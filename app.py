@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWid
 from PyQt5.QtGui import QPixmap
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import QDir
 
 
 widgets = {
@@ -39,7 +40,7 @@ def clear():
 
 def browse():
     dialog = QFileDialog()
-    dialog.setDirectory(r'C:\Users\ewasi\PycharmProjects\CFG\ING')
+    dialog.setDirectory(QDir.currentPath())
     dialog.setNameFilter("Documents (*.pdf)")
     dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
     dialog.setViewMode(QFileDialog.ViewMode.List)
@@ -64,14 +65,6 @@ def main_button(text):
         "*:hover{background: '#BC006C';}"
     )
     return button
-
-# def change_label(label):
-#     widgets["label"].append(label)
-#     print(widgets["label"][-2])
-#     print(widgets["label"][-1])
-
-
-
 
 def create_buttons(answer, l_margin, r_margin):
     button = QPushButton(answer)
